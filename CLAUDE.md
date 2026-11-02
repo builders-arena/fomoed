@@ -45,7 +45,7 @@ float-meteora/
 
 ## Build status
 
-Phases 1–2 code-complete (foundation, launch, swap, graduation/migration, fee
-claims, badge-check). On-chain DoDs run manually on devnet. Phase 3 (DB +
-indexer) is next. See `docs/plan.md` for the full phased plan and
-`docs/phase1.md` / `docs/phase2.md` for per-phase status.
+Phases 1–3 code-complete: foundation/launch/swap, graduation + fee claims,
+and the Postgres schema (`@float/db`) + Helius webhook indexer
+(`@float/indexer`) with backfill/resnapshot. On-chain + DB DoDs run manually.
+Phase 4 (bots) is next. See `docs/plan.md` and `docs/phase1.md`..`phase3.md`.
