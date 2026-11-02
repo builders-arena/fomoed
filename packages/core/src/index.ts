@@ -1,5 +1,6 @@
 export * from './constants.js';
 export * from './fees.js';
+export * from './invariants.js';
 export * from './env.js';
 export * from './connection.js';
 export * from './wallets.js';

@@ -7,9 +7,9 @@ import {
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 import { Keypair, PublicKey, type Connection } from '@solana/web3.js';
-import pino from 'pino';
+import { buildLogger } from './observability.js';
 
-export const log = pino({ level: process.env.LOG_LEVEL ?? 'info' });
+export const log = buildLogger();
 
 /** Load a bot hot-wallet keypair from its env var (throws if unset). */
 function requireKeypair(envVar: string): Keypair {

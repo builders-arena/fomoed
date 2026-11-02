@@ -1,6 +1,7 @@
 import { Queue, Worker, type Job } from 'bullmq';
 import IORedis from 'ioredis';
 import { botConfig, INTERVALS } from './config.js';
+import { captureError } from './observability.js';
 import { log } from './shared.js';
 import { runCycle } from './workers/cycle.js';
 import { runPayout } from './workers/payout.js';
@@ -54,7 +55,10 @@ async function process(job: Job): Promise<void> {
 
 export function startWorker(): Worker {
   const worker = new Worker(QUEUE_NAME, process, { connection: redis(), concurrency: 1 });
-  worker.on('failed', (job, err) => log.error({ job: job?.name, err }, 'bot: job failed'));
+  worker.on('failed', (job, err) => {
+    log.error({ job: job?.name, err }, 'bot: job failed');
+    captureError(err, { job: job?.name });
+  });
   return worker;
 }
 

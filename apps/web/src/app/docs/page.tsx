@@ -3,6 +3,7 @@ import {
   DAMM_V2_PROGRAM_ID,
   DBC_PROGRAM_ID,
   FEE_SPLIT_BPS,
+  getFlagshipMint,
   INITIAL_MARKET_CAP_USD,
   MIGRATION_MARKET_CAP_USD,
   TOTAL_TOKEN_SUPPLY,
@@ -55,6 +56,7 @@ export default function DocsPage(): JSX.Element {
         <ul className="break-all font-mono text-xs text-muted">
           <li>DBC program: {DBC_PROGRAM_ID.toBase58()}</li>
           <li>DAMM v2 program: {DAMM_V2_PROGRAM_ID.toBase58()}</li>
+          {getFlagshipMint() && <li>Flagship mint: {getFlagshipMint()?.toBase58()}</li>}
         </ul>
       </section>
     </div>

@@ -1,6 +1,7 @@
 import { botConfig } from './config.js';
 import { addRepeatables, startWorker } from './queues.js';
 import { buildAdmin } from './admin.js';
+import { initObservability } from './observability.js';
 import { log } from './shared.js';
 
 /**
@@ -10,6 +11,7 @@ import { log } from './shared.js';
 async function main(): Promise<void> {
   const cfg = botConfig();
 
+  initObservability();
   startWorker();
   await addRepeatables();
   log.info('bots: worker started, repeatables registered');

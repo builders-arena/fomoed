@@ -1,0 +1,75 @@
+{
+  "title": "Float — bots & fees",
+  "schemaVersion": 39,
+  "tags": ["float"],
+  "timezone": "browser",
+  "time": { "from": "now-24h", "to": "now" },
+  "templating": {
+    "list": [
+      {
+        "name": "ds",
+        "type": "datasource",
+        "query": "grafana-postgresql-datasource",
+        "label": "Postgres"
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Fees claimed / hour (quote base units)",
+      "type": "timeseries",
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "${ds}" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "targets": [
+        {
+          "format": "time_series",
+          "rawSql": "SELECT date_trunc('hour', ts) AS time, sum(total_claimed)::float8 AS \"fees\" FROM fee_claims WHERE ts > now() - interval '24 hours' GROUP BY 1 ORDER BY 1",
+          "rawQuery": true
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Failed tx / hour",
+      "type": "timeseries",
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "${ds}" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "targets": [
+        {
+          "format": "time_series",
+          "rawSql": "SELECT date_trunc('hour', ts) AS time, count(*)::float8 AS \"failed\" FROM tx_log WHERE status = 'FAILED' AND ts > now() - interval '24 hours' GROUP BY 1 ORDER BY 1",
+          "rawQuery": true
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Confirmed tx / hour by bot",
+      "type": "timeseries",
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "${ds}" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "targets": [
+        {
+          "format": "time_series",
+          "rawSql": "SELECT date_trunc('hour', ts) AS time, bot AS metric, count(*)::float8 AS value FROM tx_log WHERE status = 'CONFIRMED' AND ts > now() - interval '24 hours' GROUP BY 1, 2 ORDER BY 1",
+          "rawQuery": true
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Payouts sent / hour",
+      "type": "timeseries",
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "${ds}" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "targets": [
+        {
+          "format": "time_series",
+          "rawSql": "SELECT date_trunc('hour', created_at) AS time, count(*)::float8 AS \"payouts\" FROM payouts WHERE status = 'sent' AND created_at > now() - interval '24 hours' GROUP BY 1 ORDER BY 1",
+          "rawQuery": true
+        }
+      ]
+    }
+  ]
+}

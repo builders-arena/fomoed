@@ -45,9 +45,11 @@ float-meteora/
 
 ## Build status
 
-Phases 1–5 code-complete: foundation/launch/swap, graduation + fee claims,
+Phases 1–6 code-complete: foundation/launch/swap, graduation + fee claims,
 Postgres schema (`@float/db`) + Helius indexer (`@float/indexer`), the five bots
-(`@float/bots`), and the Next.js web app (`@float/web`: tokens/coin/create/
-analytics/profile/burns/docs) — `next build` green. On-chain + DB + bot DoDs run
-manually. Phase 6 (hardening + mainnet) is next. See `docs/plan.md` and
-`docs/phase1.md`..`phase5.md` (+ `docs/runbooks/bots.md`).
+(`@float/bots`), the Next.js web app (`@float/web`), and hardening — invariant
+checker, `mainnet-preflight`, observability (Sentry/Loki), Grafana dashboard,
+threat model (`docs/security.md`). Going live is gated on `mainnet-preflight`.
+All packages typecheck + lint; 21 unit tests + `next build` pass. On-chain / DB /
+bot / mainnet DoDs run manually. Phase 7 is optional upgrades. See `docs/plan.md`
+and `docs/phase1.md`..`phase6.md` (+ `docs/runbooks/bots.md`, `docs/security.md`).

@@ -14,10 +14,13 @@
     "register-coin": "tsx src/register-coin.ts",
     "resnapshot-holders": "tsx src/resnapshot-holders.ts",
     "backfill": "tsx src/backfill.ts",
+    "invariants": "tsx src/invariants.ts",
+    "mainnet-preflight": "tsx src/mainnet-preflight.ts",
     "verify:phase1": "tsx src/verify-phase1.ts",
     "verify:phase2": "tsx src/verify-phase2.ts",
     "verify:phase3": "tsx src/verify-phase3.ts",
     "verify:phase4": "tsx src/verify-phase4.ts",
+    "verify:phase6": "tsx src/verify-phase6.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src"
   },

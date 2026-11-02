@@ -89,3 +89,14 @@ export const MIGRATION_MARKET_CAP_USD = 150_000;
  * platform-controlled share that `FEE_SPLIT_BPS` divides.
  */
 export const PROTOCOL_FEE_FRACTION = 0.2;
+
+/**
+ * Float's own flagship token, launched through /create on a SOL pair at mainnet
+ * time (Phase 6). The buyback worker buys and burns it. It is env-driven
+ * (`FLAGSHIP_MINT`) rather than a baked-in literal, since it does not exist
+ * until launch; record the launched mint in the deployment env.
+ */
+export function getFlagshipMint(): PublicKey | null {
+  const v = process.env.FLAGSHIP_MINT;
+  return v && v.length > 0 ? new PublicKey(v) : null;
+}
