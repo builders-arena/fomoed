@@ -27,6 +27,8 @@ model PoolConfig {
   configPubkey String   @map("config_pubkey")
   createdAt    DateTime @default(now()) @map("created_at")
   createdByTx  String   @map("created_by_tx")
+  /// When true, cycle/payout skip every coin on this quote mint.
+  paused       Boolean  @default(false)
 
   @@map("pool_configs")
 }
@@ -183,6 +185,60 @@ model Airdrop {
   @@unique([roundId, wallet])
   @@index([wallet])
   @@map("airdrops")
+}
+
+enum TxStatus {
+  SIMULATED
+  SENT
+  CONFIRMED
+  FAILED
+}
+
+/// One row per on-chain send attempt by a bot (idempotency + audit trail).
+model TxLog {
+  id        String   @id @default(cuid())
+  ts        DateTime @default(now())
+  bot       String
+  action    String
+  status    TxStatus
+  attempt   Int      @default(1)
+  signature String?
+  pool      String?
+  mint      String?
+  dryRun    Boolean  @default(false) @map("dry_run")
+  /// Deterministic idempotency key for the action this attempt belongs to.
+  idemKey   String?  @map("idem_key")
+  error     String?
+
+  @@index([bot, ts])
+  @@index([idemKey])
+  @@map("tx_log")
+}
+
+/// Pending quote owed to the holders of a coin (credited by cycle, debited by payout).
+model HoldersPool {
+  coin   String
+  mint   String
+  amount BigInt @default(0)
+
+  @@id([coin, mint])
+  @@map("holders_pool")
+}
+
+/// Pending quote earmarked for the flagship buyback, per mint.
+model FlagshipPool {
+  mint   String @id
+  amount BigInt @default(0)
+
+  @@map("flagship_pool")
+}
+
+/// Pending quote earmarked for the trader airdrop, per mint.
+model TradersPool {
+  mint   String @id
+  amount BigInt @default(0)
+
+  @@map("traders_pool")
 }
 
 /// Indexer progress, keyed by a logical stream id (e.g. "dbc", "damm").
