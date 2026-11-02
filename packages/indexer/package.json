@@ -1,0 +1,7 @@
+{
+  "name": "@float/indexer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Helius webhook receiver → Postgres. Implemented in Phase 3."
+}

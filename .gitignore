@@ -1,0 +1,22 @@
+node_modules/
+dist/
+.turbo/
+coverage/
+*.log
+
+# env & secrets
+.env
+.env.*
+!.env.example
+*.keypair.json
+keypairs/
+wallets/*.json
+
+# local config registry (Phase 1 file-backed store)
+.float/
+
+# os / editor
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json

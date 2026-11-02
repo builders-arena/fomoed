@@ -1,0 +1,7 @@
+{
+  "name": "@float/bots",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "cycle, payout, buyback, airdrop, migrator workers. Implemented in Phase 4."
+}

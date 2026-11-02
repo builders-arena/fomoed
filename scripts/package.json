@@ -1,0 +1,24 @@
+{
+  "name": "@float/scripts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "launch": "tsx src/launch.ts",
+    "swap": "tsx src/swap.ts",
+    "pool-state": "tsx src/pool-state.ts",
+    "verify:phase1": "tsx src/verify-phase1.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src"
+  },
+  "dependencies": {
+    "@float/core": "workspace:*",
+    "@meteora-ag/dynamic-bonding-curve-sdk": "^1.4.0",
+    "@solana/web3.js": "^1.98.0",
+    "bn.js": "^5.2.1",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/bn.js": "^5.1.6"
+  }
+}

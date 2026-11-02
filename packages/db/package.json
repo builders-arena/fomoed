@@ -1,0 +1,7 @@
+{
+  "name": "@float/db",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Prisma schema + client. Implemented in Phase 3."
+}
