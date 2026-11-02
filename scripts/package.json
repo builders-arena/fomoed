@@ -7,13 +7,20 @@
     "launch": "tsx src/launch.ts",
     "swap": "tsx src/swap.ts",
     "pool-state": "tsx src/pool-state.ts",
+    "fill-curve": "tsx src/fill-curve.ts",
+    "migrate": "tsx src/migrate.ts",
+    "claim": "tsx src/claim.ts",
+    "badge-check": "tsx src/badge-check.ts",
     "verify:phase1": "tsx src/verify-phase1.ts",
+    "verify:phase2": "tsx src/verify-phase2.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src"
   },
   "dependencies": {
     "@float/core": "workspace:*",
+    "@meteora-ag/cp-amm-sdk": "^1.1.0",
     "@meteora-ag/dynamic-bonding-curve-sdk": "^1.4.0",
+    "@solana/spl-token": "^0.4.9",
     "@solana/web3.js": "^1.98.0",
     "bn.js": "^5.2.1",
     "zod": "^3.24.1"

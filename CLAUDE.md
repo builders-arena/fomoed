@@ -45,4 +45,7 @@ float-meteora/
 
 ## Build status
 
-Phase 1 (Foundation) in progress. See `docs/plan.md` for the full phased plan.
+Phases 1–2 code-complete (foundation, launch, swap, graduation/migration, fee
+claims, badge-check). On-chain DoDs run manually on devnet. Phase 3 (DB +
+indexer) is next. See `docs/plan.md` for the full phased plan and
+`docs/phase1.md` / `docs/phase2.md` for per-phase status.

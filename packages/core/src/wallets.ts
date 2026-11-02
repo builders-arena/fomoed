@@ -40,18 +40,17 @@ export function loadKeypair(source: string): Keypair {
   return Keypair.fromSecretKey(bs58.decode(trimmed));
 }
 
-/** Resolve a public key from an explicit address, else from a keypair source. */
-function resolveAddress(address: string | undefined, keypairSource: string | undefined): PublicKey {
-  if (address && address.length > 0) return new PublicKey(address);
-  if (keypairSource && keypairSource.length > 0) return loadKeypair(keypairSource).publicKey;
-  throw new Error('No address or keypair source provided');
-}
-
 export interface Wallets {
   /** Deployer/admin — pays rent, signs scripts. Always a live keypair. */
   admin: Keypair;
   /** Fee claimer address (may be a multisig with no local key). */
   feeClaimer: PublicKey;
+  /**
+   * Fee claimer *signer*, when a local key is available (devnet). Null when
+   * `FEE_CLAIMER_ADDRESS` is set — i.e. an external multisig that must sign
+   * claim transactions out of band.
+   */
+  feeClaimerSigner: Keypair | null;
   /** Leftover-receiver address (defaults to fee claimer if unset). */
   leftoverReceiver: PublicKey;
   /** Treasury address (defaults to fee claimer if unset). */
@@ -61,10 +60,22 @@ export interface Wallets {
 /** Load the wallet set needed for launches and config creation. */
 export function loadWallets(e: Env = loadEnv()): Wallets {
   const admin = loadKeypair(e.ADMIN_KEYPAIR);
-  const feeClaimer = resolveAddress(e.FEE_CLAIMER_ADDRESS, e.FEE_CLAIMER_KEYPAIR ?? e.ADMIN_KEYPAIR);
+
+  // If an explicit fee-claimer *address* is set, treat it as external (no key
+  // to sign with). Otherwise load the keypair (dedicated, or fall back to admin).
+  let feeClaimer: PublicKey;
+  let feeClaimerSigner: Keypair | null;
+  if (e.FEE_CLAIMER_ADDRESS && e.FEE_CLAIMER_ADDRESS.length > 0) {
+    feeClaimer = new PublicKey(e.FEE_CLAIMER_ADDRESS);
+    feeClaimerSigner = null;
+  } else {
+    feeClaimerSigner = loadKeypair(e.FEE_CLAIMER_KEYPAIR ?? e.ADMIN_KEYPAIR);
+    feeClaimer = feeClaimerSigner.publicKey;
+  }
+
   const leftoverReceiver = e.LEFTOVER_RECEIVER_ADDRESS
     ? new PublicKey(e.LEFTOVER_RECEIVER_ADDRESS)
     : feeClaimer;
   const treasury = e.TREASURY_ADDRESS ? new PublicKey(e.TREASURY_ADDRESS) : feeClaimer;
-  return { admin, feeClaimer, leftoverReceiver, treasury };
+  return { admin, feeClaimer, feeClaimerSigner, leftoverReceiver, treasury };
 }
