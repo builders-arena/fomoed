@@ -45,9 +45,9 @@ float-meteora/
 
 ## Build status
 
-Phases 1–4 code-complete: foundation/launch/swap, graduation + fee claims,
-Postgres schema (`@float/db`) + Helius indexer (`@float/indexer`), and the five
-bots (`@float/bots`: cycle, payout, buyback, airdrop, migrator) with a shared
-DRY_RUN-capable `sendTx`, ledger, Jupiter/price modules, and admin API.
-On-chain + DB + bot DoDs run manually. Phase 5 (web app) is next.
-See `docs/plan.md` and `docs/phase1.md`..`phase4.md` (+ `docs/runbooks/bots.md`).
+Phases 1–5 code-complete: foundation/launch/swap, graduation + fee claims,
+Postgres schema (`@float/db`) + Helius indexer (`@float/indexer`), the five bots
+(`@float/bots`), and the Next.js web app (`@float/web`: tokens/coin/create/
+analytics/profile/burns/docs) — `next build` green. On-chain + DB + bot DoDs run
+manually. Phase 6 (hardening + mainnet) is next. See `docs/plan.md` and
+`docs/phase1.md`..`phase5.md` (+ `docs/runbooks/bots.md`).

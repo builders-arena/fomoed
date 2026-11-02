@@ -7,6 +7,8 @@
   "types": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
+    "./constants": "./src/constants.ts",
+    "./fees": "./src/fees.ts",
     "./dbc": "./src/dbc/index.ts"
   },
   "scripts": {
