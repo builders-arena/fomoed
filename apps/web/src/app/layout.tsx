@@ -6,7 +6,7 @@ import { Providers } from './providers';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Float — coins that pay their holders',
+  title: 'Fomoed — coins that pay their holders',
   description: 'Coins paired with tokenized assets. Every trade pays its holders.',
 };
 

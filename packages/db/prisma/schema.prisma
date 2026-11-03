@@ -189,6 +189,19 @@ model Airdrop {
   @@map("airdrops")
 }
 
+/// Uploaded coin logos + generated token metadata, served from API routes.
+model Asset {
+  id          String   @id @default(cuid())
+  contentType String   @map("content_type")
+  data        Bytes
+  name        String?
+  symbol      String?
+  description String?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("assets")
+}
+
 enum TxStatus {
   SIMULATED
   SENT

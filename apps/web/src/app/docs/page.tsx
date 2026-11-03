@@ -30,7 +30,7 @@ export default function DocsPage(): JSX.Element {
   return (
     <div className="flex animate-fade-up flex-col gap-10">
       <header>
-        <h1 className="text-3xl font-extrabold tracking-tight">How Float works</h1>
+        <h1 className="text-3xl font-extrabold tracking-tight">How Fomoed works</h1>
         <p className="mt-2 max-w-2xl text-muted">
           Coins paired with real assets, with deep liquidity from the first trade — and fees that
           flow back to the people holding and trading them.

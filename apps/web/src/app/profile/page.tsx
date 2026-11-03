@@ -87,7 +87,7 @@ export default function ProfilePage(): JSX.Element {
 
       <Section title="Rewards & airdrops" subtitle="Holder rewards and trader airdrops paid to you.">
         {!data || (data.rewards.length === 0 && data.airdrops.length === 0) ? (
-          <Empty>Nothing yet. Hold a Float coin or trade to earn.</Empty>
+          <Empty>Nothing yet. Hold a Fomoed coin or trade to earn.</Empty>
         ) : (
           <div className="flex flex-col divide-y divide-border text-sm">
             {data.rewards.map((r, i) => (
