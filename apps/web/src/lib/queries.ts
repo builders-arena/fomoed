@@ -16,6 +16,7 @@ export interface CoinListItem {
   migrationState: number;
   volume24h: string;
   rewardsPaid: string;
+  launchedAt: string;
 }
 
 export async function listCoins(quoteMint?: string): Promise<CoinListItem[]> {
@@ -41,6 +42,7 @@ export async function listCoins(quoteMint?: string): Promise<CoinListItem[]> {
     migrationState: c.migrationState,
     volume24h: (volByPool.get(c.pool) ?? 0n).toString(),
     rewardsPaid: (paidByCoin.get(c.pool) ?? 0n).toString(),
+    launchedAt: c.launchedAt.toISOString(),
   }));
 }
 
@@ -78,12 +80,36 @@ export async function getCoin(pool: string): Promise<CoinDetail | null> {
     creatorWallet: c.creatorWallet,
     uri: c.uri,
     dammPool: c.dammPool,
+    launchedAt: c.launchedAt.toISOString(),
     volume24h: (vol._sum.quoteAmount ?? 0n).toString(),
     rewardsPaid: (paid._sum.amount ?? 0n).toString(),
     pendingHolders: (pending?.amount ?? 0n).toString(),
     totalClaimed: (claimed._sum.totalClaimed ?? 0n).toString(),
     swapCount,
   };
+}
+
+/** Recent price points (quote per token) derived from swaps, oldest→newest. */
+export async function getCoinSeries(
+  pool: string,
+  quoteDecimals: number,
+  limit = 120,
+): Promise<Array<{ t: number; v: number }>> {
+  const swaps = await prisma.swap.findMany({
+    where: { pool, baseAmount: { gt: 0n }, quoteAmount: { gt: 0n } },
+    orderBy: { ts: 'desc' },
+    take: limit,
+    select: { ts: true, baseAmount: true, quoteAmount: true },
+  });
+  const baseDec = 6;
+  return swaps
+    .reverse()
+    .map((s) => {
+      const q = Number(s.quoteAmount) / 10 ** quoteDecimals;
+      const b = Number(s.baseAmount) / 10 ** baseDec;
+      return { t: s.ts.getTime(), v: b > 0 ? q / b : 0 };
+    })
+    .filter((p) => p.v > 0);
 }
 
 export interface Analytics {
@@ -157,6 +183,7 @@ async function listCoinsByCreator(wallet: string): Promise<CoinListItem[]> {
     migrationState: c.migrationState,
     volume24h: '0',
     rewardsPaid: '0',
+    launchedAt: c.launchedAt.toISOString(),
   }));
 }
 

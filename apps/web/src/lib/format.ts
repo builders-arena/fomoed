@@ -24,6 +24,16 @@ export function pct(n: number): string {
   return `${(n * 100).toFixed(1)}%`;
 }
 
+export function compact(n: number): string {
+  if (!Number.isFinite(n)) return '—';
+  return new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 2 }).format(n);
+}
+
+/** Compact a base-unit bigint to a human string (e.g. 1.2K). */
+export function compactBase(amount: bigint, decimals: number): string {
+  return compact(Number(amount) / 10 ** decimals);
+}
+
 export function solscan(address: string, cluster = 'devnet'): string {
   const suffix = cluster === 'mainnet-beta' ? '' : `?cluster=${cluster}`;
   return `https://solscan.io/account/${address}${suffix}`;

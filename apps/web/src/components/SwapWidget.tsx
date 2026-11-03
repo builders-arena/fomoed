@@ -1,8 +1,12 @@
 'use client';
 
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
-import { DynamicBondingCurveClient, SwapMode } from '@meteora-ag/dynamic-bonding-curve-sdk';
-import { getCurrentPoint } from '@meteora-ag/dynamic-bonding-curve-sdk';
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+import {
+  DynamicBondingCurveClient,
+  getCurrentPoint,
+  SwapMode,
+} from '@meteora-ag/dynamic-bonding-curve-sdk';
 import { PublicKey } from '@solana/web3.js';
 import BN from 'bn.js';
 import { useState } from 'react';
@@ -27,15 +31,15 @@ export function SwapWidget({
 }): JSX.Element {
   const { connection } = useConnection();
   const wallet = useWallet();
+  const [side, setSide] = useState<'buy' | 'sell'>('buy');
   const [amount, setAmount] = useState('');
   const [status, setStatus] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  async function swap(side: 'buy' | 'sell'): Promise<void> {
-    if (!wallet.publicKey || !wallet.sendTransaction) {
-      setStatus('Connect a wallet first.');
-      return;
-    }
+  const unit = side === 'buy' ? quoteSymbol : 'tokens';
+
+  async function swap(): Promise<void> {
+    if (!wallet.publicKey || !wallet.sendTransaction) return;
     if (!amount || Number(amount) <= 0) {
       setStatus('Enter an amount.');
       return;
@@ -79,7 +83,7 @@ export function SwapWidget({
 
       setStatus('Confirm in your wallet…');
       const sig = await wallet.sendTransaction(tx, connection);
-      setStatus(`Sent: ${sig.slice(0, 8)}…`);
+      setStatus(`Sent ✓ ${sig.slice(0, 8)}…`);
     } catch (err) {
       setStatus(err instanceof Error ? err.message : String(err));
     } finally {
@@ -88,24 +92,59 @@ export function SwapWidget({
   }
 
   return (
-    <div className="card flex flex-col gap-3">
-      <h3 className="font-semibold">Swap</h3>
-      <input
-        className="input"
-        placeholder={`Amount (${quoteSymbol} to buy / tokens to sell)`}
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-        inputMode="decimal"
-      />
-      <div className="flex gap-2">
-        <button className="btn flex-1" disabled={busy} onClick={() => void swap('buy')}>
-          Buy
-        </button>
-        <button className="btn-ghost flex-1" disabled={busy} onClick={() => void swap('sell')}>
-          Sell
-        </button>
+    <div className="card p-5">
+      <div className="mb-4 grid grid-cols-2 gap-1 rounded-xl border border-border bg-black/20 p-1">
+        {(['buy', 'sell'] as const).map((s) => (
+          <button
+            key={s}
+            onClick={() => setSide(s)}
+            className={`rounded-lg py-2 text-sm font-semibold capitalize transition-colors ${
+              side === s
+                ? s === 'buy'
+                  ? 'bg-primary/15 text-primary'
+                  : 'bg-down/15 text-down'
+                : 'text-muted hover:text-ink'
+            }`}
+          >
+            {s}
+          </button>
+        ))}
       </div>
-      {status && <p className="text-sm text-muted">{status}</p>}
+
+      <label className="label">Amount ({unit})</label>
+      <div className="relative">
+        <input
+          className="input pr-16 text-lg"
+          placeholder="0.0"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          inputMode="decimal"
+        />
+        <span className="num absolute right-4 top-1/2 -translate-y-1/2 text-sm text-faint">{unit}</span>
+      </div>
+
+      {wallet.publicKey ? (
+        <button
+          onClick={() => void swap()}
+          disabled={busy}
+          className={`mt-4 w-full rounded-xl py-3 text-sm font-semibold transition-all disabled:opacity-50 ${
+            side === 'buy' ? 'btn' : ''
+          }`}
+          style={
+            side === 'sell'
+              ? { backgroundImage: 'linear-gradient(135deg,#FF6B6B,#e85555)', color: '#fff' }
+              : undefined
+          }
+        >
+          {busy ? 'Working…' : side === 'buy' ? `Buy ${quoteSymbol}→token` : 'Sell token'}
+        </button>
+      ) : (
+        <div className="wallet-wrap mt-4 [&_.wallet-adapter-button]:!w-full [&_.wallet-adapter-button]:!justify-center [&_.wallet-adapter-button]:!h-11">
+          <WalletMultiButton>Connect to trade</WalletMultiButton>
+        </div>
+      )}
+
+      {status && <p className="mt-3 break-words text-xs text-muted">{status}</p>}
     </div>
   );
 }

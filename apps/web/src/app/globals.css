@@ -6,28 +6,126 @@
   color-scheme: dark;
 }
 
+* {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
 body {
-  @apply bg-bg text-white;
-  font-family:
-    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  @apply bg-bg text-ink font-sans;
+  min-height: 100dvh;
 }
 
-.card {
-  @apply rounded-xl border border-border bg-panel p-4;
+/* Ambient background glow (Meteora teal → violet) */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(60% 40% at 50% -5%, rgba(52, 229, 164, 0.1), transparent 70%),
+    radial-gradient(50% 35% at 85% 10%, rgba(124, 107, 255, 0.08), transparent 70%),
+    #07090f;
+  pointer-events: none;
 }
 
-.btn {
-  @apply inline-flex items-center justify-center rounded-lg bg-accent px-4 py-2 font-medium text-black transition hover:opacity-90 disabled:opacity-50;
+@layer components {
+  .card {
+    @apply rounded-2xl border border-border bg-surface/80 backdrop-blur-sm;
+    box-shadow: var(--tw-shadow, 0 12px 32px -16px rgba(0, 0, 0, 0.6));
+  }
+
+  .card-pad {
+    @apply card p-5;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold text-black transition-all;
+    background-image: linear-gradient(135deg, #34e5a4 0%, #2fd79a 100%);
+  }
+  .btn:hover {
+    filter: brightness(1.05);
+    box-shadow: 0 8px 24px -8px rgba(52, 229, 164, 0.5);
+  }
+  .btn:disabled {
+    @apply opacity-50;
+    filter: none;
+    box-shadow: none;
+  }
+
+  .btn-violet {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold text-white transition-all;
+    background-image: linear-gradient(135deg, #7c6bff 0%, #6a57f5 100%);
+  }
+  .btn-violet:hover {
+    box-shadow: 0 8px 24px -8px rgba(124, 107, 255, 0.5);
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-borderStrong bg-white/[0.02] px-5 py-2.5 text-sm font-semibold text-ink transition-all hover:border-primary/60 hover:bg-white/[0.04];
+  }
+
+  .pill {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-border bg-white/[0.03] px-3 py-1 text-xs font-medium text-muted;
+  }
+
+  .input {
+    @apply w-full rounded-xl border border-border bg-black/30 px-4 py-2.5 text-ink outline-none transition-colors placeholder:text-faint focus:border-primary/60;
+  }
+
+  .label {
+    @apply mb-1.5 block text-xs font-medium uppercase tracking-wider text-faint;
+  }
+
+  .stat {
+    @apply rounded-xl border border-border bg-white/[0.02] p-4;
+  }
+  .stat-label {
+    @apply text-[11px] font-medium uppercase tracking-wider text-faint;
+  }
+  .stat-value {
+    @apply mt-1 font-mono text-xl font-semibold text-ink;
+  }
+
+  .num {
+    @apply font-mono tabular-nums;
+  }
+
+  .gradient-text {
+    @apply bg-brand bg-clip-text text-transparent;
+  }
+
+  .divider {
+    @apply border-t border-border;
+  }
+
+  .link {
+    @apply text-primary transition-colors hover:text-primary/80;
+  }
 }
 
-.btn-ghost {
-  @apply inline-flex items-center justify-center rounded-lg border border-border px-4 py-2 font-medium text-white transition hover:border-accent;
+/* Wallet adapter button — match the Float theme */
+.wallet-wrap .wallet-adapter-button {
+  height: 38px;
+  padding: 0 16px;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #34e5a4 0%, #2fd79a 100%);
+  color: #07090f;
+  transition: filter 0.15s ease;
+}
+.wallet-wrap .wallet-adapter-button:not([disabled]):hover {
+  background: linear-gradient(135deg, #34e5a4 0%, #2fd79a 100%);
+  filter: brightness(1.05);
+}
+.wallet-wrap .wallet-adapter-button[disabled] {
+  background: #141a26;
+  color: #98a2b3;
+}
+.wallet-adapter-modal-wrapper {
+  background: #0d111a;
+  border: 1px solid #1e2634;
 }
 
-.input {
-  @apply w-full rounded-lg border border-border bg-bg px-3 py-2 text-white outline-none focus:border-accent;
-}
-
-.label {
-  @apply mb-1 block text-sm text-muted;
-}
