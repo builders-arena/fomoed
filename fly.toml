@@ -1,0 +1,17 @@
+# Fly.io config for the Fomoed fee-distribution bots.
+# Deploy from the repo root: `bash infra/fly/deploy.sh`
+app = "fomoed-bots"
+primary_region = "iad"
+
+[build]
+  dockerfile = "infra/fly/Dockerfile"
+
+[env]
+  ADMIN_API_PORT = "8788"
+
+# Worker process — no [http_service]/[[services]], so nothing is exposed
+# publicly. The admin API is reachable only on Fly's private network.
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory = "512mb"
