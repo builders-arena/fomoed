@@ -3,6 +3,7 @@ import { PrismaConfigStore, registerCoin } from '@float/db';
 import { PublicKey } from '@solana/web3.js';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
+import { subscribePool } from '@/lib/helius';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -39,5 +40,7 @@ export async function POST(req: Request): Promise<NextResponse> {
       configTx,
     );
   }
+  // Subscribe the pool to the indexer webhook so its swaps get indexed.
+  await subscribePool(coin.pool);
   return NextResponse.json({ ok: true, pool: coin.pool });
 }
