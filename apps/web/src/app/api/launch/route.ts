@@ -7,6 +7,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { RPC_URL } from '@/lib/config';
 import { pairFor } from '@/lib/pairs';
+import { getQuoteUsdPrice } from '@/lib/price';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -19,8 +20,6 @@ const bodySchema = z.object({
   creator: z.string(),
   firstBuy: z.string().default('0'),
 });
-
-const USD_FALLBACK: Record<string, number> = { SOL: 150, USDC: 1, JUP: 1 };
 
 function toBaseUnits(value: string, decimals: number): BN {
   const [whole, frac = ''] = value.split('.');
@@ -88,7 +87,7 @@ export async function POST(req: Request): Promise<NextResponse> {
     const configParams = buildPartnerConfig({
       quoteMint: body.quoteMint,
       quoteDecimals: pair.decimals,
-      quoteUsdPrice: USD_FALLBACK[pair.symbol] ?? 1,
+      quoteUsdPrice: await getQuoteUsdPrice(body.quoteMint, pair.symbol),
     });
     const { createConfigTx, createPoolWithFirstBuyTx } =
       await client.partner.createConfigAndPoolWithFirstBuy({

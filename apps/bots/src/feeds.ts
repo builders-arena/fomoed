@@ -7,9 +7,7 @@ import { z } from 'zod';
  * fallback is a documented TODO (Phase 6 hardening).
  */
 
-const priceSchema = z.object({
-  data: z.record(z.object({ price: z.union([z.string(), z.number()]) }).nullable()),
-});
+const priceSchema = z.record(z.object({ usdPrice: z.number() }).passthrough().nullable());
 
 const STABLE_USD: Record<string, number> = {
   [USDC_MINT_MAINNET.toBase58()]: 1,
@@ -24,12 +22,12 @@ export async function getUsdPrice(mint: string): Promise<number | null> {
   if (hit && Date.now() - hit.at < TTL_MS) return hit.price;
 
   try {
-    const res = await fetch(`https://api.jup.ag/price/v2?ids=${mint}`);
+    const res = await fetch(`https://lite-api.jup.ag/price/v3?ids=${mint}`);
     if (res.ok) {
       const json = priceSchema.parse(await res.json());
-      const entry = json.data[mint];
+      const entry = json[mint];
       if (entry) {
-        const p = Number(entry.price);
+        const p = entry.usdPrice;
         if (Number.isFinite(p) && p > 0) {
           cache.set(mint, { price: p, at: Date.now() });
           return p;
