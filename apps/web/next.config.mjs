@@ -8,7 +8,7 @@ const dir = path.dirname(fileURLToPath(import.meta.url));
 const nextConfig = {
   reactStrictMode: true,
   // @float/* are TS workspace packages compiled by Next.
-  transpilePackages: ['@float/core', '@float/db'],
+  transpilePackages: ['@float/core', '@float/db', '@float/indexer'],
   // Prisma must stay external to the server bundle.
   experimental: {
     serverComponentsExternalPackages: ['@prisma/client', '.prisma/client'],
