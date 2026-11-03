@@ -1,10 +1,10 @@
 const GRADIENTS = [
-  ['#34E5A4', '#7C6BFF'],
-  ['#7C6BFF', '#FF6B9D'],
-  ['#F6A24A', '#FF6B6B'],
-  ['#4AC8FF', '#34E5A4'],
-  ['#FFD24A', '#F6A24A'],
-  ['#A18AFF', '#4AC8FF'],
+  ['#F54B00', '#6E45FF'],
+  ['#6E45FF', '#9E83FF'],
+  ['#F5BD00', '#F54B00'],
+  ['#F76727', '#F5BD00'],
+  ['#9E83FF', '#F54B00'],
+  ['#6E45FF', '#F5BD00'],
 ];
 
 function hash(s: string): number {

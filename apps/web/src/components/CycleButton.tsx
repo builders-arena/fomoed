@@ -26,7 +26,7 @@ export function CycleButton({ pool }: { pool: string }): JSX.Element {
         onClick={() => void trigger()}
         disabled={busy}
         className="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-white transition-all hover:brightness-110 disabled:opacity-50"
-        style={{ backgroundImage: 'linear-gradient(135deg, #F6A24A 0%, #FF6B6B 100%)' }}
+        style={{ backgroundImage: 'linear-gradient(135deg, #F5BD00 0%, #F54B00 100%)' }}
       >
         <span>🔥</span> Cycle fees
       </button>

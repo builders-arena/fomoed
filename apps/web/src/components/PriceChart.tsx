@@ -30,7 +30,7 @@ export function PriceChart({
   const area = `${line} L${x(points.length - 1).toFixed(1)},${h} L${x(0).toFixed(1)},${h} Z`;
   const last = points[points.length - 1]!;
   const up = last.v >= points[0]!.v;
-  const stroke = up ? '#34E5A4' : '#FF6B6B';
+  const stroke = up ? '#24C98D' : '#FF6B6B';
 
   return (
     <svg viewBox={`0 0 ${w} ${h}`} width="100%" height={h} preserveAspectRatio="none">
