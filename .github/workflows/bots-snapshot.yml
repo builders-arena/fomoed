@@ -32,3 +32,5 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter @float/db exec prisma generate
       - run: pnpm --filter @float/bots snapshot
+
+# re-scan nudge
