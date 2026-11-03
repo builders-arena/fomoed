@@ -22,3 +22,4 @@ wallets/*.json
 .idea/
 .vscode/*
 !.vscode/extensions.json
+.vercel
