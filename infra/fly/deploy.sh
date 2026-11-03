@@ -28,10 +28,26 @@ set -a
 source apps/bots/.env
 set +a
 
-b58() { pnpm --filter @float/core exec node "$ROOT/infra/fly/b58.mjs" "$1"; }
+# Convert a keypair JSON file to base58; abort loudly on any failure so a bad
+# value can never be set as a secret.
+b58() {
+  local out
+  out="$(node "$ROOT/packages/core/b58.mjs" "$1")" || { echo "b58 failed for $1" >&2; exit 1; }
+  case "$out" in
+    [1-9A-HJ-NP-Za-km-z]*) : ;;
+    *) echo "b58 produced an invalid value for $1" >&2; exit 1 ;;
+  esac
+  printf '%s' "$out"
+}
 
 echo "→ creating app $APP (ok if it already exists)"
 "$FLY" apps create "$APP" 2>/dev/null || true
+
+echo "→ converting keypairs"
+ADMIN_B58="$(b58 "$ROOT/.wallets/admin.json")"
+PAYOUT_B58="$(b58 "$ROOT/.wallets/payout.json")"
+BUYBACK_B58="$(b58 "$ROOT/.wallets/buyback.json")"
+AIRDROP_B58="$(b58 "$ROOT/.wallets/airdrop.json")"
 
 echo "→ setting secrets"
 "$FLY" secrets set --app "$APP" --stage \
@@ -42,10 +58,10 @@ echo "→ setting secrets"
   DRY_RUN="${DRY_RUN:-false}" \
   ADMIN_API_TOKEN="${ADMIN_API_TOKEN:-}" \
   FLAGSHIP_MINT="${FLAGSHIP_MINT:-}" \
-  ADMIN_KEYPAIR="$(b58 "$ROOT/.wallets/admin.json")" \
-  PAYOUT_KEYPAIR="$(b58 "$ROOT/.wallets/payout.json")" \
-  BUYBACK_KEYPAIR="$(b58 "$ROOT/.wallets/buyback.json")" \
-  AIRDROP_KEYPAIR="$(b58 "$ROOT/.wallets/airdrop.json")"
+  ADMIN_KEYPAIR="$ADMIN_B58" \
+  PAYOUT_KEYPAIR="$PAYOUT_B58" \
+  BUYBACK_KEYPAIR="$BUYBACK_B58" \
+  AIRDROP_KEYPAIR="$AIRDROP_B58"
 
 echo "→ deploying"
 "$FLY" deploy --app "$APP" --ha=false
