@@ -7,6 +7,8 @@
     "dev": "tsx watch src/main.ts",
     "start": "tsx src/main.ts",
     "standalone": "tsx src/standalone.ts",
+    "tick": "tsx src/tick.ts",
+    "snapshot": "tsx src/snapshot.ts",
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint src",

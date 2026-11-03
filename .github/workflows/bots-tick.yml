@@ -1,0 +1,39 @@
+name: bots tick
+
+# Runs the fee-distribution workers once per schedule (no always-on host needed).
+on:
+  schedule:
+    - cron: '*/15 * * * *' # every 15 minutes
+  workflow_dispatch: {}
+
+concurrency:
+  group: bots-tick
+  cancel-in-progress: false
+
+jobs:
+  tick:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CLUSTER: mainnet-beta
+      DRY_RUN: 'false'
+      RPC_URL: ${{ secrets.RPC_URL }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      TREASURY_ADDRESS: ${{ secrets.TREASURY_ADDRESS }}
+      ADMIN_KEYPAIR: ${{ secrets.ADMIN_KEYPAIR }}
+      PAYOUT_KEYPAIR: ${{ secrets.PAYOUT_KEYPAIR }}
+      BUYBACK_KEYPAIR: ${{ secrets.BUYBACK_KEYPAIR }}
+      AIRDROP_KEYPAIR: ${{ secrets.AIRDROP_KEYPAIR }}
+      FLAGSHIP_MINT: ${{ secrets.FLAGSHIP_MINT }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @float/db exec prisma generate
+      - run: pnpm --filter @float/bots tick
