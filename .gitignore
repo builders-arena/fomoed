@@ -13,6 +13,7 @@ coverage/
 *.keypair.json
 keypairs/
 wallets/*.json
+.wallets/
 
 # local config registry (Phase 1 file-backed store)
 .float/
